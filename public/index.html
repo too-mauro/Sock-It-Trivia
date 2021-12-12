@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+
+    <!-- Ensure that everything scales appropriately on a mobile device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <!-- Let's borrow a cool looking Font from Google -->
+    <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+    <link href="css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<body>
+    <span id="solidBackground">
+        <!-- This is the solid background shown during the game -->
+    </span>
+
+    <span id="scrollingBackground">
+        <!-- This is the scrolling background shown during the title and create game screens -->
+    </span>
+
+    <div id="gameArea">
+        <!-- This is where the templates defined below will be used -->
+    </div>
+
+    <!-- Main Title Screen that appears when the page loads for the first time -->
+    <script id="intro-screen-template" type="text/template">
+        <div class="titleWrapper">
+
+            <div class="title">SOCK IT!</div>
+            <div class="subtitle">Trivia Game</div>
+            <br><br>
+
+            <div class="buttons">
+                <button id="btnCreateGame" class="btn">CREATE</button>
+                <br><br><br>
+                <button id="btnJoinGame" class="btn">JOIN</button>
+                <div style="clear:both"></div>
+            </div>
+
+
+        </div>
+
+    </script>
+
+    <!-- This screen appears when a user clicks "CREATE" on the Title Screen -->
+    <script id="create-game-template" type="text/template">
+        <div class="createGameWrapper">
+            <div class="info">Open this site on your mobile device:</div>
+            <div id="gameURL" class="infoBig">Error!</div>
+
+            <div class="info">Then click <strong>JOIN</strong> and enter the following Game ID:</div>
+            <div id="spanNewGameCode" class="gameId">Error!</div>
+
+            <div class="blinker" id="playersWaiting">Waiting for players to join...</div>
+
+            <div id="playerScores">
+                <div id="player1Score" class="playerScore blinker">
+                  <p>
+                    <span class="score">READY!</span>
+                    <span class="playerName">
+                        <br><br><b>JOIN!</b>
+                    </span>
+                  </p>
+                </div>
+                <div id="player2Score" class="playerScore blinker">
+                  <p>
+                    <span class="score">READY!</span>
+                    <span class="playerName">
+                        <br><br><b>JOIN!</b>
+                    </span>
+                  </p>
+                </div>
+                <div id="player3Score" class="playerScore blinker">
+                  <p>
+                    <span class="score">READY!</span>
+                    <span class="playerName">
+                        <br><br><b>JOIN!</b>
+                    </span>
+                  </p>
+                </div>
+                <div id="player4Score" class="playerScore blinker">
+                  <p>
+                    <span class="score">READY!</span>
+                    <span class="playerName">
+                        <br><br><b>JOIN!</b>
+                    </span>
+                  </p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- This scrreen appears when a player clicks "JOIN" on the Title Screen -->
+    <script id="join-game-template" type="text/template">
+        <div class="joinGameWrapper">
+            <div class="info">
+                <label for="inputPlayerName">Your Name:</label>
+                <input id="inputPlayerName" type="text" />
+
+                <br><br><Br>
+
+                <label for="inputGameId">Game ID:</label>
+                <input id="inputGameId" type="text" />
+
+                <br><br><br>
+
+                <div class="buttons">
+                    <button id="btnStart" class="btn" style="font-size: 1.25em">JOIN</button>
+                </div>
+            </div>
+
+            <div id="playerWaitingMessage"></div>
+
+        </div>
+    </script>
+
+    <!-- This is the 'Host' screen. It displays the word for each player to match -->
+    <script id="host-game-template" type="text/template">
+      <div class="gameWrapper">
+        <div id="timer">🕒 <b><span id="timerTime">0:30</span></b></div>
+
+        <div id="wordArea">
+            <div id="triviaQuestion">5</div>
+        </div>
+
+        <div id="playerScores">
+            <div id="player1Score" class="playerScore">
+              <p>
+                <span class="score">0</span>
+                <span class="playerName"></span>
+              </p>
+            </div>
+            <div id="player2Score" class="playerScore">
+              <p>
+                <span class="score">0</span>
+                <span class="playerName"></span>
+              </p>
+            </div>
+            <div id="player3Score" class="playerScore">
+              <p>
+                <span class="score">0</span>
+                <span class="playerName"></span>
+              </p>
+            </div>
+            <div id="player4Score" class="playerScore">
+              <p>
+                <span class="score">0</span>
+                <span class="playerName"></span>
+              </p>
+            </div>
+        </div>
+      </div>
+    </script>
+
+    <!-- This is the "game over" template used for the host player's screen when the game ends -->
+    <script id="game-restart-template" type="text/template">
+        <br><br>
+        <div class='buttons'>
+          <button class='btn' id='btnGameStart'>REMATCH<br>(SAME PLAYERS)</button>
+          <br><br><br>
+          <button class='btn' id='btnPlayerRestart'>RETURN TO<br>LOBBY</button>
+        </div>
+    </script>
+
+    <!-- JavaScript Libraries -->
+
+    <!-- jQuery! -->
+    <script src="libs/jquery-3.6.0.min.js"></script>
+
+    <!-- TextFit resizes text to fill a container.
+        It's used so the titles and game words fit properly on any size screen.
+        https://github.com/STRML/textFit   -->
+    <script src="libs/textFit.min.js"></script>
+
+    <!-- FastClick is used to eliminate the 300ms delay when clicking items on a mobile device
+        https://github.com/ftlabs/fastclick -->
+    <script src="libs/fastclick.js"></script>
+
+    <!-- If Socket.IO is used with Express, then the /socket.io/ path will
+        serve the proper Socket.IO javascript files used by the browser -->
+    <script src="socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+    </script>
+
+    <!-- app.js is where all the client-side game logic -->
+    <script src="app.js"></script>
+
+</body>
+</html>
